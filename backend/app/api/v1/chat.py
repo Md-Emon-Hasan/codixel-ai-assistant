@@ -6,10 +6,8 @@ import logging
 from fastapi import APIRouter, Depends, HTTPException, Request, WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
 
-from app.core.auth import get_current_agent
 from app.core.config import Settings
 from app.db import get_db
-from app.models import Agent
 from app.schemas.chat import (
     AdminAssignRequest,
     AdminReplyRequest,
@@ -173,14 +171,13 @@ def conversation_detail(conversation_id: str, db: Session = Depends(get_db)):
 
 
 # ---------------------------------------------------------------------------
-# Admin endpoints — require valid JWT (agent login)
+# Admin endpoints — no auth
 # ---------------------------------------------------------------------------
 
 @router.get("/admin/conversations")
 def admin_conversations(
     status: str = "all",
     db: Session = Depends(get_db),
-    _: Agent = Depends(get_current_agent),
 ):
     items = list_conversations(db, status=status)
     return {"conversations": [serialize_conversation(item) for item in items]}
@@ -191,12 +188,11 @@ async def admin_accept(
     conversation_id: str,
     body: AdminAssignRequest,
     db: Session = Depends(get_db),
-    agent: Agent = Depends(get_current_agent),
 ):
     conversation = get_conversation(db, conversation_id)
     if conversation is None:
         raise HTTPException(status_code=404, detail="Conversation not found.")
-    agent_name = body.agent_name or agent.display_name
+    agent_name = body.agent_name or "Admin"
     system_message = assign_agent(db, conversation, agent_name)
     db.commit()
     db.refresh(conversation)
@@ -219,13 +215,12 @@ async def admin_reply(
     conversation_id: str,
     body: AdminReplyRequest,
     db: Session = Depends(get_db),
-    agent: Agent = Depends(get_current_agent),
 ):
     conversation = get_conversation(db, conversation_id)
     if conversation is None:
         raise HTTPException(status_code=404, detail="Conversation not found.")
 
-    agent_name = body.agent_name or agent.display_name
+    agent_name = body.agent_name or "Admin"
     if conversation.status != "assigned_to_agent":
         # Auto-accept when replying without explicitly accepting
         assign_agent(db, conversation, agent_name)
@@ -277,7 +272,6 @@ async def user_revert(
 async def admin_revert(
     conversation_id: str,
     db: Session = Depends(get_db),
-    agent: Agent = Depends(get_current_agent),
 ):
     conversation = get_conversation(db, conversation_id)
     if conversation is None:

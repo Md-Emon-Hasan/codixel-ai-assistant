@@ -33,10 +33,10 @@ export default function ChatInput({ onSend, disabled, placeholder = "Message Cod
 
   return (
     <div
-      className={`flex items-end gap-2 bg-gray-800/80 border rounded-2xl px-4 py-3 transition-all duration-200 ${
+      className={`flex items-end gap-2 rounded-xl border px-4 py-3 transition-all duration-200 bg-white dark:bg-gray-800/80 ${
         overLimit
-          ? "border-red-500/60 focus-within:border-red-500"
-          : "border-gray-700/60 focus-within:border-violet-500/70"
+          ? "border-red-300 dark:border-red-500/60 focus-within:border-red-400 dark:focus-within:border-red-500"
+          : "border-gray-200 dark:border-gray-700/60 focus-within:border-violet-400 dark:focus-within:border-violet-500/70 focus-within:ring-2 focus-within:ring-violet-400/10 dark:focus-within:ring-violet-500/10"
       }`}
     >
       <textarea
@@ -47,21 +47,21 @@ export default function ChatInput({ onSend, disabled, placeholder = "Message Cod
         onKeyDown={handleKeyDown}
         disabled={disabled}
         placeholder={placeholder}
-        className="flex-1 bg-transparent text-sm text-gray-100 placeholder-gray-600 resize-none outline-none leading-relaxed min-h-[24px] max-h-[160px] disabled:opacity-40"
+        className="flex-1 min-h-6 max-h-40 resize-none bg-transparent text-sm leading-relaxed outline-none text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 disabled:opacity-40"
       />
 
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex shrink-0 items-center gap-2">
         {nearLimit && (
-          <span className={`text-[11px] font-mono ${overLimit ? "text-red-400" : "text-gray-500"}`}>
+          <span className={`font-mono text-[11px] ${overLimit ? "text-red-500 dark:text-red-400" : "text-gray-400 dark:text-gray-500"}`}>
             {remaining}
           </span>
         )}
         <button
           onClick={submit}
           disabled={!text.trim() || disabled || overLimit}
-          className="w-8 h-8 rounded-xl bg-violet-600 hover:bg-violet-500 disabled:bg-gray-700 disabled:text-gray-600 text-white flex items-center justify-center transition-all duration-150 shrink-0 cursor-pointer disabled:cursor-not-allowed shadow-sm shadow-violet-900/20"
+          className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-violet-600 text-white shadow-sm shadow-violet-500/20 transition-all duration-150 hover:bg-violet-500 hover:shadow-md hover:shadow-violet-500/30 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400 dark:disabled:bg-gray-700 dark:disabled:text-gray-600"
         >
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
           </svg>
         </button>

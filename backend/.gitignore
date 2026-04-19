@@ -11,6 +11,7 @@ __pycache__/
 venv/
 .venv/
 env/
+.env.example
 
 # Data & index (large files — manage separately)
 data/faiss_store/

@@ -108,3 +108,18 @@ def list_agents(
         AgentResponse(id=a.id, username=a.username, display_name=a.display_name, is_admin=a.is_admin, is_active=a.is_active)
         for a in agents
     ]
+
+
+@router.delete("/agents/{agent_id}", status_code=204)
+def deactivate_agent(
+    agent_id: int,
+    db: Session = Depends(get_db),
+    current: Agent = Depends(require_admin),
+):
+    if current.id == agent_id:
+        raise HTTPException(status_code=400, detail="Cannot deactivate your own account.")
+    target = db.query(Agent).filter(Agent.id == agent_id).first()
+    if not target:
+        raise HTTPException(status_code=404, detail="Agent not found.")
+    target.is_active = False
+    db.commit()

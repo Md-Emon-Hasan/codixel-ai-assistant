@@ -41,7 +41,7 @@ export const useChatStore = create(
             conversationHistory: [
               {
                 id: conversation.id,
-                title: conversation.guest_name || "New chat",
+                title: conversation.guest_name || (preview ? preview.slice(0, 50) : "Chat"),
                 preview: preview ? preview.slice(0, 80) : "",
                 created_at: conversation.created_at,
                 status: conversation.status,

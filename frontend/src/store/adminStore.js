@@ -4,8 +4,7 @@ import { persist } from "zustand/middleware";
 export const useAdminStore = create(
   persist(
     (set) => ({
-      token: null,
-      agent: null,
+      
 
       conversations: [],
       selectedId: null,
@@ -15,21 +14,8 @@ export const useAdminStore = create(
       loadingList: false,
       replying: false,
 
-      setAuth: (token, agent) =>
-        set({
-          token,
-          agent,
-          agentName: agent.display_name || agent.username,
-        }),
-      clearAuth: () =>
-        set({
-          token: null,
-          agent: null,
-          conversations: [],
-          selectedId: null,
-          selectedDetail: null,
-          agentName: "",
-        }),
+      setAuth: (agentName) => set({ agentName }),
+      clearAuth: () => set({ conversations: [], selectedId: null, selectedDetail: null, agentName: "" }),
 
       setFilter: (filter) => set({ filter }),
       setAgentName: (agentName) => set({ agentName }),
@@ -68,8 +54,6 @@ export const useAdminStore = create(
     {
       name: "codixel-admin-v2",
       partialize: (state) => ({
-        token: state.token,
-        agent: state.agent,
         agentName: state.agentName,
       }),
     }
