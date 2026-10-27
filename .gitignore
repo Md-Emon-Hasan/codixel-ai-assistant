@@ -1,0 +1,11 @@
+*.safetensors
+*.onnx
+*.onnx_data
+*.bin
+*.gguf
+*.pt
+tokenizer.json
+tokenizer.model
+onnx/
+__pycache__/
+.ipynb_checkpoints/
